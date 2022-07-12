@@ -43,5 +43,11 @@ namespace CursoDesenvolvimentoWeb.Controllers
             await _userRepository.AddAsync(newUser);
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> Logged()
+        {
+            await Task.Yield();
+            return View();
+        }
     }
 }
