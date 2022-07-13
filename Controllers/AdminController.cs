@@ -44,10 +44,15 @@ namespace CursoDesenvolvimentoWeb.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> Logged()
+        public async Task<IActionResult> Logged(UserViewModel model)
         {
-            await Task.Yield();
-            return View();
+            var users = await _userRepository.All();
+            var userExist = users.Where(a => a.Password == model.Password && a.Email == model.Email).Count();
+
+            if (userExist > 0)
+                return View();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

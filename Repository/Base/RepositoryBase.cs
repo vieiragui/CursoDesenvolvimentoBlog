@@ -25,7 +25,7 @@ namespace CursoDesenvolvimentoWeb.Repository.Base
             await Context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> All() =>
+        public async Task<IList<TEntity>> All() =>
             await DbSet.ToListAsync();
 
         public async Task<TEntity> GetPerId(Guid id) =>
