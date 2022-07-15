@@ -47,12 +47,20 @@ namespace CursoDesenvolvimentoWeb.Controllers
         public async Task<IActionResult> Logged(UserViewModel model)
         {
             var users = await _userRepository.All();
-            var userExist = users.Where(a => a.Password == model.Password && a.Email == model.Email).Count();
+            var userExist = users
+                .Where(a => a.Password == model.Password && a.Email == model.Email)
+                .Count();
 
             if (userExist > 0)
                 return View();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> NewPost()
+        {
+            await Task.Yield();
+            return View();
         }
     }
 }
