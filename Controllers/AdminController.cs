@@ -62,5 +62,11 @@ namespace CursoDesenvolvimentoWeb.Controllers
             await Task.Yield();
             return View();
         }
+
+        public async Task<IActionResult> SavePost()
+        {
+            await Task.Yield();
+            return View();
+        }
     }
 }

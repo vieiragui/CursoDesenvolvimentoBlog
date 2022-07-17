@@ -5,9 +5,9 @@ using CursoDesenvolvimentoWeb.Repository.Interfaces;
 
 namespace CursoDesenvolvimentoWeb.Repository
 {
-    public class UserRepository : RepositoryBase<User>, IUserRepository
+    public class PostRepository : RepositoryBase<Post>, IPostRepository
     {
-        public UserRepository(BlogDbContext context) : base(context)
+        public PostRepository(BlogDbContext context) : base(context)
         {
         }
     }
