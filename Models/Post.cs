@@ -19,6 +19,7 @@ namespace CursoDesenvolvimentoWeb.Models
             Resume = resume;
             Content = content;
             Image = image;
+            DatePost = DateTime.Now;
         }
     }
 }

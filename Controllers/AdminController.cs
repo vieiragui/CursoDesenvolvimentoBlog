@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CursoDesenvolvimentoWeb.Models;
 using CursoDesenvolvimentoWeb.Repository.Interfaces;
 using CursoDesenvolvimentoWeb.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,14 +17,17 @@ namespace CursoDesenvolvimentoWeb.Controllers
     {
         private readonly ILogger<AdminController> _logger;
         private readonly IRepositoryBase<User> _userRepository;
+        private readonly IRepositoryBase<Post> _postRepository;
 
         public AdminController(
             ILogger<AdminController> logger,
-            IRepositoryBase<User> userRepository
+            IRepositoryBase<User> userRepository,
+            IRepositoryBase<Post> postRepository
         )
         {
             _logger = logger;
             _userRepository = userRepository;
+            _postRepository = postRepository;
         }
 
         public IActionResult Index()
@@ -63,10 +68,28 @@ namespace CursoDesenvolvimentoWeb.Controllers
             return View();
         }
 
-        public async Task<IActionResult> SavePost()
+        public async Task<IActionResult> SavePost(PostViewModel model)
         {
-            await Task.Yield();
-            return View();
+            var id = Guid.NewGuid();
+            var imageToByte = ConvertToBytes(model.Image);
+            
+            var newPost = new Post(id, model.Title, model.Resume, model.Content, imageToByte);
+            await _postRepository.AddAsync(newPost);
+            
+            return RedirectToAction("NewPost", "Admin");
+        }
+
+        private byte[] ConvertToBytes(IFormFile image)
+        {
+            if (image == null)
+                return null;
+
+            using (var inputStream = image.OpenReadStream())
+            using (var stream = new MemoryStream())
+            {
+                inputStream.CopyTo(stream);
+                return stream.ToArray();
+            }
         }
     }
 }
