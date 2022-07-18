@@ -72,11 +72,17 @@ namespace CursoDesenvolvimentoWeb.Controllers
         {
             var id = Guid.NewGuid();
             var imageToByte = ConvertToBytes(model.Image);
-            
+
             var newPost = new Post(id, model.Title, model.Resume, model.Content, imageToByte);
             await _postRepository.AddAsync(newPost);
-            
+
             return RedirectToAction("NewPost", "Admin");
+        }
+
+        public async Task<IActionResult> AllPosts()
+        {
+            var allPosts = await _postRepository.All();
+            return View(allPosts);
         }
 
         private byte[] ConvertToBytes(IFormFile image)
