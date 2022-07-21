@@ -85,6 +85,25 @@ namespace CursoDesenvolvimentoWeb.Controllers
             return View(allPosts);
         }
 
+        public async Task<IActionResult> UpdatePost(string id, string title, string resume, string content, IFormFile image)
+        {
+            var convertId = Guid.Parse(id);
+            var imageToBytes = ConvertToBytes(image);
+            var getPosts = await _postRepository.All();
+
+            var post = getPosts.Where(p => p.Id == convertId).FirstOrDefault();
+
+            post.Title = title;
+            post.Resume = resume;
+            post.Content = content;
+
+            if (imageToBytes != null)
+                post.Image = imageToBytes;
+            
+            await _postRepository.UpdateAsync(post);
+            return RedirectToAction(nameof(AllPosts));
+        }
+
         private byte[] ConvertToBytes(IFormFile image)
         {
             if (image == null)
