@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using CursoDesenvolvimentoWeb.Models;
 using CursoDesenvolvimentoWeb.Repository.Interfaces;
 using System.Threading.Tasks;
+using System;
 
 namespace CursoDesenvolvimentoWeb.Controllers
 {
@@ -24,6 +25,14 @@ namespace CursoDesenvolvimentoWeb.Controllers
             return View(allPosts);
         }
 
+        public async Task<IActionResult> Post(string postId)
+        {
+            var idFormated = Guid.Parse(postId);
+            var getPost = await _postRepository.GetPerId(idFormated);
+
+            return View(getPost);
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -32,7 +41,12 @@ namespace CursoDesenvolvimentoWeb.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+                }
+            );
         }
     }
 }

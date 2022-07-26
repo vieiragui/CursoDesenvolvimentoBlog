@@ -10,6 +10,8 @@ using CursoDesenvolvimentoWeb.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace CursoDesenvolvimentoWeb.Controllers
 {
@@ -94,7 +96,7 @@ namespace CursoDesenvolvimentoWeb.Controllers
         )
         {
             var convertId = Guid.Parse(id);
-            var imageToBytes = ConvertToBytes(image);
+            var imageToBytes = ResizeImage(image);
             var getPosts = await _postRepository.All();
 
             var post = getPosts.Where(p => p.Id == convertId).FirstOrDefault();
@@ -127,6 +129,20 @@ namespace CursoDesenvolvimentoWeb.Controllers
                 inputStream.CopyTo(stream);
                 return stream.ToArray();
             }
+        }
+
+        public static byte[] ResizeImage(IFormFile img)
+        {
+            if (img == null)
+                return null;
+
+            var image = Image.Load(img.OpenReadStream());
+            var format = Image.DetectFormat(img.OpenReadStream());
+            image.Mutate(x => x.Resize(357, 227));
+            var imageInByte = image.ToBase64String(format).Split(',')[1];
+
+            var imgConvertedToByte = Convert.FromBase64String(imageInByte);
+            return imgConvertedToByte.ToArray();
         }
     }
 }
