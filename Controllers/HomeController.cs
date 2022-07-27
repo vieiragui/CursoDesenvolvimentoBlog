@@ -5,6 +5,7 @@ using CursoDesenvolvimentoWeb.Models;
 using CursoDesenvolvimentoWeb.Repository.Interfaces;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 namespace CursoDesenvolvimentoWeb.Controllers
 {
@@ -22,6 +23,7 @@ namespace CursoDesenvolvimentoWeb.Controllers
         public async Task<IActionResult> Index()
         {
             var allPosts = await _postRepository.All();
+            ViewBag.AllPosts = allPosts;
             return View(allPosts);
         }
 
@@ -30,7 +32,17 @@ namespace CursoDesenvolvimentoWeb.Controllers
             var idFormated = Guid.Parse(postId);
             var getPost = await _postRepository.GetPerId(idFormated);
 
+            var allPosts = await _postRepository.All();
+            ViewBag.AllPosts = allPosts;
+
             return View(getPost);
+        }
+
+        public async Task<IActionResult> SearchPost(string title) { 
+            var allPost = await _postRepository.All();
+            var postSelected = allPost.Where(p => p.Title.ToUpper().Contains(title.ToUpper())).ToList();
+
+            return View();
         }
 
         public IActionResult Privacy()
