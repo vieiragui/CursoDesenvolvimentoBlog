@@ -27,6 +27,19 @@ namespace CursoDesenvolvimentoWeb.Controllers
             return View(allPosts);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(string title)
+        {
+            var allPost = await _postRepository.All();
+            var postsSelected = allPost
+                .Where(p => p.Title.ToUpper().Contains(title.ToUpper()))
+                .ToList();
+
+            ViewBag.AllPosts = postsSelected;
+
+            return View(allPost);
+        }
+
         public async Task<IActionResult> Post(string postId)
         {
             var idFormated = Guid.Parse(postId);
@@ -38,9 +51,12 @@ namespace CursoDesenvolvimentoWeb.Controllers
             return View(getPost);
         }
 
-        public async Task<IActionResult> SearchPost(string title) { 
+        public async Task<IActionResult> SearchPost(string title)
+        {
             var allPost = await _postRepository.All();
-            var postSelected = allPost.Where(p => p.Title.ToUpper().Contains(title.ToUpper())).ToList();
+            var postSelected = allPost
+                .Where(p => p.Title.ToUpper().Contains(title.ToUpper()))
+                .ToList();
 
             return View();
         }
